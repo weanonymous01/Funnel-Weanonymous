@@ -44,6 +44,15 @@ FOR SELECT
 TO anon, authenticated 
 USING (true);
 
+-- 6. Create RLS Policy for Unsubscribe Updates (UPDATE)
+DROP POLICY IF EXISTS "Allow anonymous unsubscribe" ON public.leads;
+CREATE POLICY "Allow anonymous unsubscribe" 
+ON public.leads 
+FOR UPDATE 
+TO anon, authenticated 
+USING (true)
+WITH CHECK (true);
+
 -- ========================================================
 -- HELPER VIEWS FOR LEAD SEGMENTATION ANALYTICS
 -- ========================================================
