@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>We Anonymous -- Join India's Biggest Cybersecurity Community</title>
+  
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  
+  <!-- Supabase JS Client SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    /* Step 2 -- Global CSS Reset and Base Styles */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: #080808;
+      color: #fefefe;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    input, select, button, textarea {
+      font-family: inherit;
+      font-size: inherit;
+    }
+
+    /* Step 3 -- Top Announcement Bar */
+    .top-bar {
+      width: 100%;
+      background-color: #080808;
+      border-bottom: 1px solid rgba(254, 254, 254, 0.1);
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .top-bar-text {
+      font-size: 13px;
+      color: rgba(254, 254, 254, 0.6);
+      letter-spacing: 0.01em;
+    }
+
+    .top-bar-btn {
+      background-color: #fefefe;
+      color: #080808;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 7px 18px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .top-bar-btn:hover {
+      background-color: #d5fc47;
+    }
+
+    /* Step 4 -- Hero Section */
+    .hero {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 80px 24px 60px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .badge {
+      display: inline-block;
+      border: 1px solid rgba(254, 254, 254, 0.25);
+      border-radius: 999px;
+      padding: 6px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(254, 254, 254, 0.7);
+      letter-spacing: 0.03em;
+    }
+
+    .hero-title {
+      font-size: clamp(48px, 10vw, 80px);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: #fefefe;
+    }
+
+    .hero-sub {
+      font-size: clamp(18px, 4vw, 24px);
+      font-weight: 700;
+      color: #fefefe;
+      letter-spacing: -0.01em;
+    }
+
+    .hero-body {
+      font-size: 15px;
+      color: rgba(254, 254, 254, 0.6);
+      max-width: 480px;
+      line-height: 1.7;
+    }
+
+    .founder-tag {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .founder-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #d5fc47;
+      color: #080808;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .founder-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #fefefe;
+      text-align: left;
+    }
+
+    .founder-role {
+      font-size: 12px;
+      color: rgba(254, 254, 254, 0.5);
+      text-align: left;
+    }
+
+    /* Step 5 -- Lead Capture Form */
+    .form-section {
+      max-width: 540px;
+      margin: 0 auto;
+      padding: 20px 24px 60px;
+    }
+
+    .form-card {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .form-input {
+      width: 100%;
+      background-color: #111111;
+      border: 1px solid rgba(254, 254, 254, 0.12);
+      border-radius: 10px;
+      padding: 16px 18px;
+      color: #fefefe;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .form-input::placeholder {
+      color: rgba(254, 254, 254, 0.3);
+    }
+
+    .form-input:focus {
+      border-color: #d5fc47;
+      box-shadow: 0 0 0 1px #d5fc47;
+    }
+
+    .form-select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23fefefe' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 18px center;
+      padding-right: 48px;
+      cursor: pointer;
+    }
+
+    .form-select option {
+      background-color: #111111;
+      color: #fefefe;
+    }
+
+    .country-field {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: default;
+    }
+
+    .country-flag {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(254, 254, 254, 0.5);
+    }
+
+    .country-name {
+      flex: 1;
+      font-size: 15px;
+      color: #fefefe;
+    }
+
+    .country-change {
+      font-size: 13px;
+      color: rgba(254, 254, 254, 0.4);
+      cursor: pointer;
+    }
+
+    .phone-row {
+      display: flex;
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    .phone-prefix {
+      background-color: #111111;
+      border: 1px solid rgba(254, 254, 254, 0.12);
+      border-radius: 10px;
+      padding: 16px 14px;
+      font-size: 14px;
+      font-weight: 600;
+      color: rgba(254, 254, 254, 0.6);
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+    }
+
+    .phone-input {
+      flex: 1;
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 18px;
+      background-color: #111111;
+      border: 1px solid rgba(254, 254, 254, 0.12);
+      border-radius: 10px;
+    }
+
+    .toggle-label {
+      font-size: 14px;
+      color: rgba(254, 254, 254, 0.7);
+      flex: 1;
+    }
+
+    .toggle-option {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      color: #fefefe;
+      cursor: pointer;
+    }
+
+    .toggle-option input[type="radio"] {
+      accent-color: #d5fc47;
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #fefefe;
+      line-height: 1.5;
+    }
+
+    .checkbox-row input[type="checkbox"] {
+      accent-color: #d5fc47;
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .checkbox-row strong {
+      color: #fefefe;
+      font-weight: 600;
+    }
+
+    .social-proof {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      justify-content: center;
+      padding: 8px 0;
+    }
+
+    .avatar-stack {
+      display: flex;
+    }
+
+    .sp-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: #111111;
+      border: 2px solid #080808;
+      margin-left: -8px;
+      object-fit: cover;
+    }
+
+    .sp-avatar:first-child {
+      margin-left: 0;
+    }
+
+    .sp-text {
+      font-size: 13px;
+      color: #fefefe;
+    }
+
+    .cta-btn {
+      width: 100%;
+      background-color: #d5fc47;
+      color: #080808;
+      font-size: 16px;
+      font-weight: 700;
+      padding: 18px 24px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.2s ease, transform 0.1s ease, background-color 0.2s ease;
+      letter-spacing: 0.01em;
+    }
+
+    .cta-btn:hover {
+      opacity: 0.9;
+    }
+
+    .cta-btn:active {
+      transform: scale(0.98);
+    }
+
+    .form-trust {
+      font-size: 12px;
+      color: rgba(254, 254, 254, 0.35);
+      text-align: center;
+    }
+
+    .tag-result {
+      background-color: #111111;
+      border: 1px solid #d5fc47;
+      border-radius: 10px;
+      padding: 20px 18px;
+      font-size: 14px;
+      color: #d5fc47;
+      font-weight: 600;
+      text-align: center;
+      line-height: 1.6;
+      box-shadow: 0 0 20px rgba(213, 252, 71, 0.15);
+    }
+
+    .tag-result .whatsapp-link {
+      display: inline-block;
+      margin-top: 14px;
+      background-color: #d5fc47;
+      color: #080808;
+      padding: 10px 20px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    /* Step 6 -- Benefits Section */
+    .benefits {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 60px 24px;
+      text-align: center;
+    }
+
+    .benefits-title {
+      font-size: clamp(28px, 6vw, 40px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #fefefe;
+      margin-bottom: 40px;
+    }
+
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .benefit-card {
+      background-color: #111111;
+      border: 1px solid rgba(254, 254, 254, 0.08);
+      border-radius: 16px;
+      padding: 28px 24px;
+      text-align: left;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .benefit-card:hover {
+      border-color: rgba(213, 252, 71, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .benefit-icon {
+      font-size: 11px;
+      font-weight: 700;
+      color: #d5fc47;
+      letter-spacing: 0.08em;
+      margin-bottom: 16px;
+    }
+
+    .benefit-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fefefe;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .benefit-desc {
+      font-size: 13px;
+      color: rgba(254, 254, 254, 0.5);
+      line-height: 1.6;
+    }
+
+    /* Step 7 -- Footer */
+    .footer {
+      border-top: 1px solid rgba(254, 254, 254, 0.08);
+      padding: 40px 24px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .footer-privacy {
+      font-size: 13px;
+      color: rgba(254, 254, 254, 0.5);
+    }
+
+    .footer-copy {
+      font-size: 12px;
+      color: rgba(254, 254, 254, 0.25);
+    }
+
+    /* Step 9 -- Mobile Responsiveness */
+    @media (max-width: 480px) {
+
+      .top-bar {
+        padding: 10px 16px;
+      }
+
+      .top-bar-text {
+        font-size: 11px;
+      }
+
+      .hero {
+        padding: 60px 16px 40px;
+      }
+
+      .form-section {
+        padding: 20px 16px 60px;
+      }
+
+      .benefits {
+        padding: 40px 16px;
+      }
+
+      .benefits-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .benefit-card {
+        padding: 20px 16px;
+      }
+
+      .phone-row {
+        flex-direction: row;
+      }
+
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Step 3 -- Top Announcement Bar -->
+  <div class="top-bar">
+    <span class="top-bar-text">Your data is safe. No spam, ever.</span>
+    <a href="#form" class="top-bar-btn">Join Community</a>
+  </div>
+
+  <!-- Step 4 -- Hero Section -->
+  <section class="hero">
+    <span class="badge">Free · Cybersecurity Community</span>
+    <h1 class="hero-title">We Anonymous</h1>
+    <p class="hero-sub">Connect with people like you.</p>
+    <p class="hero-body">
+      Get the Job-Updates. Hacking tools, OSINT techniques,
+      and live sessions straight to your WhatsApp.
+    </p>
+  </section>
+
+  <!-- Step 5 -- Lead Capture Form -->
+  <section class="form-section" id="form">
+    <div class="form-card">
+
+      <input type="text" id="name" placeholder="Your name" class="form-input" required />
+      <input type="email" id="email" placeholder="Email address" class="form-input" required />
+
+      <div class="form-input country-field">
+        <span class="country-flag">IN</span>
+        <span class="country-name">India (detected)</span>
+        <span class="country-change">Change</span>
+      </div>
+
+      <div class="phone-row">
+        <div class="phone-prefix">IN +91</div>
+        <input type="tel" id="phone" placeholder="Phone number" class="form-input phone-input" required />
+      </div>
+
+      <div class="toggle-row">
+        <span class="toggle-label">Do you know Linux?</span>
+        <label class="toggle-option">
+          <input type="radio" name="linux" value="yes" /> Yes
+        </label>
+        <label class="toggle-option">
+          <input type="radio" name="linux" value="no" checked /> No
+        </label>
+      </div>
+
+      <select id="role" class="form-input form-select" required>
+        <option value="" disabled selected>What describes you the best</option>
+        <option value="student">Student</option>
+        <option value="professional">Working Professional</option>
+        <option value="freelancer">Freelancer</option>
+        <option value="exploring">Just Exploring</option>
+      </select>
+
+      <select id="experience" class="form-input form-select" required>
+        <option value="" disabled selected>How many years in cybersecurity?</option>
+        <option value="0">0 years</option>
+        <option value="less1">Less than 1 year</option>
+        <option value="1to3">1 to 3 years</option>
+        <option value="3plus">3 plus years</option>
+      </select>
+
+      <label class="checkbox-row">
+        <input type="checkbox" id="hacksnip" checked />
+        <span>I also want to join the <strong>HackSnip 7-Day Bootcamp</strong> for free</span>
+      </label>
+
+      <label class="checkbox-row">
+        <input type="checkbox" id="newsletter" checked />
+        <span>Subscribe me to We Anonymous weekly updates</span>
+      </label>
+
+      <div class="social-proof">
+        <div class="avatar-stack">
+          <img src="p1.png" alt="Community Member 1" class="sp-avatar" />
+          <img src="p2.png" alt="Community Member 2" class="sp-avatar" />
+          <img src="p3.png" alt="Community Member 3" class="sp-avatar" />
+          <img src="p4.png" alt="Community Member 4" class="sp-avatar" />
+        </div>
+        <span class="sp-text">10,000 plus members joined</span>
+      </div>
+
+      <button type="button" class="cta-btn" onclick="handleSubmit()">
+        Get Instant Access
+      </button>
+
+      <p class="form-trust">Your data is safe. No spam, ever.</p>
+
+    </div>
+  </section>
+
+  <!-- Step 6 -- Benefits Section -->
+  <section class="benefits">
+    <h2 class="benefits-title">What You'll Get</h2>
+    <div class="benefits-grid">
+
+      <div class="benefit-card">
+        <div class="benefit-icon">01</div>
+        <h3 class="benefit-name">Daily Hacking Tips</h3>
+        <p class="benefit-desc">Real techniques, not textbook theory</p>
+      </div>
+
+      <div class="benefit-card">
+        <div class="benefit-icon">02</div>
+        <h3 class="benefit-name">Curated Tools</h3>
+        <p class="benefit-desc">Handpicked hacking tools and resources</p>
+      </div>
+
+      <div class="benefit-card">
+        <div class="benefit-icon">03</div>
+        <h3 class="benefit-name">Live Session Invites</h3>
+        <p class="benefit-desc">Weekend CTF and bootcamp sessions</p>
+      </div>
+
+      <div class="benefit-card">
+        <div class="benefit-icon">04</div>
+        <h3 class="benefit-name">Free Resources</h3>
+        <p class="benefit-desc">Roadmaps, cheatsheets, and lab guides</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Step 7 -- Footer -->
+  <footer class="footer">
+    <p class="footer-privacy">We respect your privacy. No spam, ever.</p>
+    <p class="footer-copy">We Anonymous 2026</p>
+  </footer>
+
+  <!-- Step 8 -- Segmentation & Integration JavaScript -->
+  <script>
+    // ==========================================
+    // CONFIGURATION - SUPABASE & EMAIL AUTOMATION
+    // ==========================================
+    const SUPABASE_CONFIG = {
+      url: 'https://hgasrrhsfvyswinkfvhg.supabase.co',
+      anonKey: 'sb_publishable_BzxL4H4Mx-Csc3fph_iiNw_UiVpLUk-'
+    };
+
+    const EMAIL_CONFIG = {
+      // Webhook or API endpoint for automation (e.g., Resend, Brevo, Make.com, or n8n webhook)
+      endpoint: 'YOUR_EMAIL_AUTOMATION_ENDPOINT',
+      // Optional API Key / Auth Token
+      apiKey: 'YOUR_EMAIL_API_KEY'
+    };
+
+    const WHATSAPP_CONFIG = {
+      // Community invite URL
+      groupUrl: 'https://chat.whatsapp.com/HSpSgCon0LSKbtT1ptEjzI'
+    };
+
+    // Initialize Supabase Client if configured
+    let supabaseClient = null;
+    if (window.supabase && SUPABASE_CONFIG.url !== 'YOUR_SUPABASE_URL' && SUPABASE_CONFIG.anonKey !== 'YOUR_SUPABASE_ANON_KEY') {
+      try {
+        supabaseClient = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+        console.log('Supabase client initialized successfully.');
+      } catch (err) {
+        console.warn('Could not initialize Supabase client:', err);
+      }
+    } else {
+      console.info('Supabase running in local storage fallback mode. Update SUPABASE_CONFIG in index.html to connect live database.');
+    }
+
+    // ==========================================
+    // FORM SUBMISSION HANDLER
+    // ==========================================
+    async function handleSubmit() {
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const linux = document.querySelector('input[name="linux"]:checked')?.value;
+      const role = document.getElementById('role').value;
+      const experience = document.getElementById('experience').value;
+      const hacksnip = document.getElementById('hacksnip').checked;
+      const newsletter = document.getElementById('newsletter').checked;
+
+      if (!name || !email || !phone || !linux || !role || !experience) {
+        alert('Please fill in all fields before continuing.');
+        return;
+      }
+
+      // Basic email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        alert('Please enter a valid email address.');
+        return;
+      }
+
+      // Compute segmentation tag
+      let tag = '';
+      if (role === 'professional' || role === 'freelancer') {
+        tag = 'professional';
+      } else if (linux === 'yes') {
+        tag = 'intermediate';
+      } else {
+        tag = 'beginner';
+      }
+
+      const leadData = {
+        name,
+        email,
+        phone: '+91' + phone.replace(/^\+91/, '').trim(),
+        linux,
+        role,
+        experience,
+        hacksnip,
+        newsletter,
+        tag,
+        timestamp: new Date().toISOString()
+      };
+
+      // 1. Store in LocalStorage (Local backup)
+      try {
+        localStorage.setItem('wa_lead_' + Date.now(), JSON.stringify(leadData));
+        console.log('We Anonymous Lead Captured (Local):', leadData);
+      } catch (e) {
+        console.warn('LocalStorage error:', e);
+      }
+
+      // 2. Submit to Supabase Database
+      if (supabaseClient) {
+        try {
+          const { data, error } = await supabaseClient
+            .from('leads')
+            .insert([{
+              name: leadData.name,
+              email: leadData.email,
+              phone: leadData.phone,
+              linux_knowledge: leadData.linux,
+              role: leadData.role,
+              experience: leadData.experience,
+              hacksnip_bootcamp: leadData.hacksnip,
+              newsletter_subscribed: leadData.newsletter,
+              segment_tag: leadData.tag,
+              created_at: leadData.timestamp
+            }]);
+
+          if (error) {
+            console.error('Supabase DB Insert Error:', error.message);
+          } else {
+            console.log('Lead saved to Supabase successfully:', data);
+          }
+        } catch (dbErr) {
+          console.error('Failed to communicate with Supabase:', dbErr);
+        }
+      }
+
+      // 3. Trigger Email Automation Dispatch
+      triggerEmailAutomation(leadData);
+
+      // 4. Update button text & redirect to WhatsApp Group
+      const ctaBtn = document.querySelector('.cta-btn');
+      if (ctaBtn) {
+        ctaBtn.textContent = 'Redirecting to WhatsApp...';
+        ctaBtn.style.opacity = '0.7';
+        ctaBtn.style.cursor = 'default';
+        ctaBtn.disabled = true;
+      }
+
+      setTimeout(() => {
+        window.location.href = WHATSAPP_CONFIG.groupUrl;
+      }, 400);
+    }
+
+    // ==========================================
+    // EMAIL AUTOMATION DISPATCH ENGINE
+    // ==========================================
+    async function triggerEmailAutomation(leadData) {
+      if (EMAIL_CONFIG.endpoint === 'YOUR_EMAIL_AUTOMATION_ENDPOINT') {
+        console.info('Email Automation: Configured in simulation mode. Update EMAIL_CONFIG in index.html to hook your email API (Resend/Brevo/n8n/Webhook).');
+        console.log('Simulated Welcome Email dispatch payload:', {
+          to: leadData.email,
+          subject: `Welcome to We Anonymous [${leadData.tag.toUpperCase()} Path]`,
+          segment: leadData.tag,
+          bootcamp: leadData.hacksnip
+        });
+        return;
+      }
+
+      try {
+        const response = await fetch(EMAIL_CONFIG.endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(EMAIL_CONFIG.apiKey ? { 'Authorization': `Bearer ${EMAIL_CONFIG.apiKey}` } : {})
+          },
+          body: JSON.stringify({
+            event: 'lead_captured',
+            lead: leadData,
+            email: leadData.email,
+            name: leadData.name,
+            tag: leadData.tag
+          })
+        });
+
+        if (response.ok) {
+          console.log('Email automation sequence triggered successfully.');
+        } else {
+          console.warn('Email automation endpoint returned non-200 status:', response.status);
+        }
+      } catch (err) {
+        console.error('Error triggering email automation webhook:', err);
+      }
+    }
+  </script>
+</body>
+</html>
