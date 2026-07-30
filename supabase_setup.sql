@@ -35,12 +35,13 @@ FOR INSERT
 TO anon 
 WITH CHECK (true);
 
--- 5. Create RLS Policy for Service Role / Authenticated Dashboard Access (SELECT)
+-- 5. Create RLS Policy for Admin Dashboard Access (SELECT)
 DROP POLICY IF EXISTS "Allow authenticated read access" ON public.leads;
-CREATE POLICY "Allow authenticated read access" 
+DROP POLICY IF EXISTS "Allow select access for leads" ON public.leads;
+CREATE POLICY "Allow select access for leads" 
 ON public.leads 
 FOR SELECT 
-TO authenticated 
+TO anon, authenticated 
 USING (true);
 
 -- ========================================================
