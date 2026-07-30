@@ -63,14 +63,14 @@ npx serve .
 ```
 
 ### Production Deployment
-Deploy `index.html` and image assets (`p1.png`, `p2.png`, `p3.png`, `p4.png`) to your hosting provider (Vercel, Netlify, Cloudflare Pages) and configure your custom domain `join.weanonymous.in`.
+Deploy `index.html` and the `Elements/` asset folder (`Elements/p1.png`, `Elements/p2.png`, `Elements/p3.png`, `Elements/p4.png`) to your hosting provider (Vercel, Netlify, Cloudflare Pages) and configure your custom domain `join.weanonymous.in`.
 
 ---
 
 ## File Directory
 
 - `index.html`: Complete single-page funnel application file.
-- `p1.png`, `p2.png`, `p3.png`, `p4.png`: Community member photo assets.
+- `Elements/`: Directory containing member photo assets (`p1.png`, `p2.png`, `p3.png`, `p4.png`).
 - `supabase_setup.sql`: Idempotent SQL setup script for Supabase tables, indexes, and RLS policies.
 - `README.md`: System documentation and security guide.
 - `we-anonymous-funnel-info.md`: Original specification reference document.
